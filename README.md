@@ -1,36 +1,59 @@
 # job-queues
 
-FIXME: description
+This is an exercise of functional programming provided by Nubank.
+To see the enunciation of the proposed exercise click [Here](/resources/queues-1.txt).
 
-## Installation
+## Pre requirements
 
-Download from http://example.com/FIXME.
+- Java 1.8.0
+- Leiningen 2.8.1
 
-## Usage
+## How to build
 
-FIXME: explanation
+Clone the repository and enter in the project folder
+```
+git clone git@gitlab.com:cirochang/job-queues.git
+cd job-queues
+```
 
-    $ java -jar job-queues-0.1.0-standalone.jar [args]
+Build the project
+```
+lein uberjar
+```
 
-## Options
+## How to run
 
-FIXME: listing of options this app accepts.
+```
+<json-input> | java -jar target/uberjar/job-queues-1.0.0-standalone.jar
+```
 
-## Examples
+OR
+```
+<json-input> | lein run
+```
 
-...
+Where `<json-input>` is the input in json format
 
-### Bugs
+Example:
+```
+cat resources/sample.input.json.txt | java -jar target/uberjar/job-queues-1.0.0-standalone.jar
+```
 
-...
+## The solution
 
-### Any Other Sections
-### That You Think
-### Might be Useful
+The solution was divided in some steps:
 
-## License
+To parse the data, I do:
+1. Read the input and parse to sequence format (easy to manipulate the data).
+2. Parse and split the data for jobs, agents, job_request. (In this step I also put the urgent jobs in the beginning of the sequence of jobs).
 
-Copyright © 2018 FIXME
+Then, **for each** job request... (In fact I used recursion)
+1. Get the correct agent of this job request.
+2. Get all jobs that has type equal to the primaryskillset of the agent.
+3. Get all jobs that has type equal to the secundaryskillset of the agent.
+4. Join the results of steps 4 and 5 putting in a sequence (The primaryskillsets jobs is in the beggining of this sequence).
+5. Remove the jobs of the sequence that already was assigned.
+6. Get the first job of this sequence and assign to the agent. (in this moment the first of the sequence is the best match).
 
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+Finally, convert the assign jobs to json and output this information.
+
