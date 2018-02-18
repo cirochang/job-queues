@@ -1,6 +1,7 @@
 # job-queues
 
 This is an exercise of functional programming provided by Nubank.
+To see the enunciation of the proposed exercise click [Here](/resources/queues-1.txt).
 
 ## Pre requirements
 
@@ -38,7 +39,7 @@ Example:
 cat resources/sample.input.json.txt | java -jar target/uberjar/job-queues-1.0.0-standalone.jar
 ```
 
-## Solution
+## The solution
 
 The solution was divided in some steps:
 
