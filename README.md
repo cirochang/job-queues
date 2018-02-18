@@ -42,17 +42,17 @@ cat resources/sample.input.json.txt | java -jar target/uberjar/job-queues-1.0.0-
 
 The solution was divided in some steps:
 
-#### Parse the data
+To parse the data, I do:
 1. Read the input and parse to sequence format (easy to manipulate the data).
-2. Parse and Split the data for jobs, agents, job_request. (In this step I also put the urgent jobs in the beginning of the sequence of jobs).
+2. Parse and split the data for jobs, agents, job_request. (In this step I also put the urgent jobs in the beginning of the sequence of jobs).
 
-#### Start to assign jobs.
-For each job request I do:
-3. Get correct agent of this job request.
-4. I get all possible jobs according of skillsets of the agent and put in a sequence (I put the primary skills jobs is in the beginning of the sequence).
+Then, **for each** job request... (In fact I used recursion)
+1. Get the correct agent of this job request.
+2. Get all jobs that has type equal to the primaryskillset of the agent.
+3. Get all jobs that has type equal to the secundaryskillset of the agent.
+4. Join the results of steps 4 and 5 putting in a sequence (The primaryskillsets jobs is in the beggining of this sequence).
 5. Remove the jobs of the sequence that already was assigned.
-6. Get the first job of this sequence and assign to the agent. (in this moment the first of the sequence is the best match)
+6. Get the first job of this sequence and assign to the agent. (in this moment the first of the sequence is the best match).
 
-#### Show the results
-7. Convert the assign jobs to json and output this information.
+Finally, convert the assign jobs to json and output this information.
 
