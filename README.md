@@ -36,7 +36,7 @@ Where `<json-input>` is the input in json format
 
 Example:
 ```
-cat resources/sample.input.json.txt | java -jar target/uberjar/job-queues-1.0.0-standalone.jar
+cat resources/sample-input.json.txt | java -jar target/uberjar/job-queues-1.0.0-standalone.jar
 ```
 
 ## The solution
