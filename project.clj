@@ -1,4 +1,4 @@
-(defproject job-queues "1.0.0"
+(defproject job-queues "2.0.0"
   :description "An exercise of functional programming provided by Nubank."
   :url "https://gitlab.com/cirochang/job-queues/tree/organizing-repository"
   :dependencies [[org.clojure/clojure "1.8.0"]
