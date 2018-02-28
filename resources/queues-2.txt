@@ -1,0 +1,50 @@
+# Job Queues
+
+Now that you have your dequeuing solution up and running, you must create an HTTP API to interact with your job queue
+system.
+
+All endpoints should accept and return JSON content type payloads.
+
+## Add agent
+
+Example input:
+
+```json
+{
+  "id": "8ab86c18-3fae-4804-bfd9-c3d6e8f66260",
+  "name": "BoJack Horseman",
+  "primary_skillset": ["bills-questions"],
+  "secondary_skillset": []
+}
+```
+
+## Add job
+
+Example input:
+
+```json
+{
+  "id": "f26e890b-df8e-422e-a39c-7762aa0bac36",
+  "type": "rewards_question",
+  "urgent": false
+}
+  ```
+
+## Request job
+
+Example input:
+
+```json
+{ "agent_id": "8ab86c18-3fae-4804-bfd9-c3d6e8f66260" }
+
+Output should contain the id of the assigned job or indicate the lack of one.
+```
+
+## Get current queue state
+
+Output should give a breakdown of the job queue, consisting of all completed
+jobs, jobs that are being done and jobs waiting to be assigned to an agent.
+
+## Get agent stats
+
+Given an agent, return how many jobs of each type this agent has performed.
