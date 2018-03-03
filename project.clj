@@ -5,7 +5,8 @@
                  [ring/ring-json "0.1.2"]
                  [compojure "1.3.4"]
                  [com.novemberain/monger "3.1.0"]
-                 [cheshire "4.0.3"]]
+                 [cheshire "5.1.1"]
+                 [prismatic/schema "1.1.7"]]
   :plugins [[lein-ring "0.12.3"]]
   :ring {:handler job-queues.handler/app}
   :target-path "target/%s"

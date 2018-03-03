@@ -18,18 +18,18 @@ cd job-queues
 
 Build the project
 ```
-lein uberjar
+lein ring uberjar
 ```
 
 ## How to run
 
 ```
-<json-input> | java -jar target/uberjar/job-queues-1.0.0-standalone.jar
+java -jar target/uberjar/job-queues-2.0.0-standalone.jar
 ```
 
 OR
 ```
-<json-input> | lein run
+lein ring server-headless
 ```
 
 Where `<json-input>` is the input in json format
@@ -56,4 +56,3 @@ Then, **for each** job request... (In fact I used recursion)
 6. Get the first job of this sequence and assign to the agent. (in this moment the first of the sequence is the best match).
 
 Finally, convert the assign jobs to json and output this information.
-
