@@ -19,6 +19,7 @@
 (def mock-job-request-B {"agent_id" mock-agent-id-B})
 (def mock-group-jobs-request-A [mock-job-request-A mock-job-request-B])
 
+(comment
 (deftest get-jobs-by-type-test
   (testing "test get correct jobs by type"
     (is (= (get-jobs-by-type mock-group-jobs-A ["bills-questions"]) (list mock-job-A, mock-job-C) ))
@@ -54,4 +55,5 @@
     (is (= (assign-jobs mock-group-jobs-request-A mock-group-agents-A mock-group-jobs-A [])
           [{"job_assigned" {"job_id" mock-job-id-A, "agent_id" mock-agent-id-A}},
            {"job_assigned" {"job_id" mock-job-id-B, "agent_id" mock-agent-id-B}}]))))
-          
+
+)
