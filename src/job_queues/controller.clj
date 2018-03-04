@@ -1,7 +1,7 @@
 (ns job-queues.controller
-  (:require [ring.util.response :refer [response]]
+  (:require [ring.util.response :refer [response status]]
             [schema.core :refer [validate]]
-            [job-queues.schemas :as schemas]
+            [job-queues.schema :as schema]
             [job-queues.database :as database]))
 
 (defn create-job
@@ -9,34 +9,34 @@
   [job]
   (try
     (do
-      (validate schemas/job job)
+      (validate schema/job job)
       (database/insert-job job)
       (response "ok"))
     (catch com.mongodb.DuplicateKeyException e
-      (response "This job already exists in database."))
+      (status (response "This job already exists in database.") 409))
     (catch java.lang.RuntimeException e
-      (response (str (.getMessage e))))))
+      (status (response (str (.getMessage e))) 400))))
 
 (defn create-agent
   "Add an agent in database and return 200"
   [agent]
   (try
     (do
-      (validate schemas/agent agent)
+      (validate schema/agent agent)
       (database/insert-agent agent)
       (response "ok"))
     (catch com.mongodb.DuplicateKeyException e
-      (response "This agent already exists in database."))
+      (status (response "This agent already exists in database.") 409))
     (catch java.lang.RuntimeException e
-      (response (str (.getMessage e))))))
+      (status (response (str (.getMessage e))) 400))))
 
 (defn assign-job
-  "Assign an agent-id to a job.
+  "Assign an agent-id to a best job match.
    And return the id of this job or indicate the lack of one."
   [request-job]
   (try
     (do
-      (validate schemas/request-job request-job)
+      (validate schema/request-job request-job)
       (let [agent-id (get request-job "agent_id")
             agent (database/get-agent-by-id agent-id)
             primary-job (database/get-best-job-by-skillsets (get agent :primary_skillset))
@@ -45,7 +45,7 @@
         (database/update-job-assigned (:id best-job) agent-id)
         (response {"job_id" (:id best-job) "agent_id" agent-id})))
     (catch java.lang.RuntimeException e
-      (response (str (.getMessage e))))))
+      (status (response (str (.getMessage e))) 400))))
 
 (defn get-queue-state
   "Output a breakdown of the job queue.
