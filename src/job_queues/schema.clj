@@ -1,4 +1,4 @@
-(ns job-queues.schemas
+(ns job-queues.schema
   (:require [schema.core :refer [required-key Str Bool]]))
 
 (def job

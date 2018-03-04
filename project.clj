@@ -10,4 +10,6 @@
   :plugins [[lein-ring "0.12.3"]]
   :ring {:handler job-queues.handler/app}
   :target-path "target/%s"
-  :profiles {:dev {:dependencies [[ring-mock "0.1.3"]]}})
+  :profiles {:dev {:dependencies [[ring/ring-mock "0.3.2"]
+                                  [ring/ring-core "1.6.3"]
+                                  [javax.servlet/servlet-api "2.5"]]}})
