@@ -1,6 +1,6 @@
 (ns job-queues.control-test
   (:require [clojure.test :refer :all]
-            [job-queues.control :refer :all]))
+            [job-queues.controller :refer :all]))
 
 (def mock-job-id-A "c0033410-981c-428a-954a-35dec05ef1d2")
 (def mock-job-id-B "f26e890b-df8e-422e-a39c-7762aa0bac36")

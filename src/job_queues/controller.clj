@@ -31,21 +31,25 @@
       (status (response (str (.getMessage e))) 400))))
 
 (defn assign-job
-  "Assign an agent-id to a best job match.
+  "Complete the job already assigned by agent if this job exists.
+   Assign an agent-id to a best job match if this match exists.
    And return the id of this job or indicate the lack of one."
   [request-job]
   (try
     (do
       (validate schema/request-job request-job)
-      (let [agent-id (get request-job "agent_id")
-            agent (database/get-agent-by-id agent-id)
-            primary-job (database/get-best-job-by-skillsets (get agent :primary_skillset))
-            secondary-job (database/get-best-job-by-skillsets (get agent :secondary_skillset))
-            best-job (first (concat primary-job secondary-job))]
-        (database/update-job-assigned (:id best-job) agent-id)
-        (response {"job_id" (:id best-job) "agent_id" agent-id})))
+      (let [agent (database/get-agent-by-id (get request-job "agent_id"))]
+        (if agent
+          (let [primary-job (database/get-best-job-by-skillsets (:primary_skillset agent))
+                secondary-job (database/get-best-job-by-skillsets (:secondary_skillset agent))
+                best-job (first (concat primary-job secondary-job))]
+            (database/complete-job-by-agent (:id agent))
+            (if best-job
+              (database/assign-job-to-agent (:id best-job) (:id agent)))
+            (response {"job_id" (:id best-job) "agent_id" (:id agent)}))
+          (status (response "Agent not found") 404))))
     (catch java.lang.RuntimeException e
-      (status (response (str (.getMessage e))) 400))))
+       (status (response (str (.getMessage e))) 400))))
 
 (defn get-queue-state
   "Output a breakdown of the job queue.

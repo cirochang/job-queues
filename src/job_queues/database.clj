@@ -40,12 +40,19 @@
     (sort {:urgent -1 :created_at 1})
     (limit 1)))
 
-(defn update-job-assigned
-  "Update the last job was being done to complete.
-   And update job selected to being done."
+(defn complete-job-by-agent
+  "Update the last job was being done to complete."
+  [agent-id]
+  (mc/update db "jobs"
+    {"status" "being done" "assigned_by_agent" agent-id}
+    {$set {"status" "completed"}}))
+
+(defn assign-job-to-agent
+  "Assign job to agent and update job status to being done."
   [job-id agent-id]
-  (mc/update db "jobs" {"status" "being done" "assigned_by_agent" agent-id} {$set {"status" "completed"}})
-  (if job-id (mc/update db "jobs" {"id" job-id} {$set {"assigned_by_agent" agent-id "status" "being done"}})))
+  (mc/update db "jobs"
+    {"id" job-id}
+    {$set {"assigned_by_agent" agent-id "status" "being done"}}))
 
 (defn get-all-jobs
   "Get all jobs from db."
