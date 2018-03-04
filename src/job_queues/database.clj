@@ -26,9 +26,6 @@
   (mc/remove db "jobs")
   (mc/remove db "agents"))
 
-;; Auto prepare database
-(create-db)
-
 (defn insert-job
   "Insert a job to db with default status waiting."
   [job]

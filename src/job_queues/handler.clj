@@ -3,7 +3,11 @@
             [compojure.route :as route]
             [ring.middleware.json :as middleware]
             [compojure.core :refer [defroutes POST GET]]
-            [job-queues.controller :as controller]))
+            [job-queues.controller :as controller]
+            [job-queues.database :refer [create-db]]))
+
+;; Auto prepare database
+(create-db)
 
 (defroutes app-routes
   (POST "/agents" {body :body} (controller/create-agent body))
