@@ -13,7 +13,7 @@
       (database/insert-job job)
       (response "ok"))
     (catch com.mongodb.DuplicateKeyException e
-      (status (response "This job already exists in database.") 409))
+      (status (response "This job already exists in database") 409))
     (catch java.lang.RuntimeException e
       (status (response (str (.getMessage e))) 400))))
 
@@ -26,7 +26,7 @@
       (database/insert-agent agent)
       (response "ok"))
     (catch com.mongodb.DuplicateKeyException e
-      (status (response "This agent already exists in database.") 409))
+      (status (response "This agent already exists in database") 409))
     (catch java.lang.RuntimeException e
       (status (response (str (.getMessage e))) 400))))
 
