@@ -4,5 +4,7 @@
 
 (defn do-request
   "Helpper to do some requests and populate the database."
-  [request-type endpoint body]
-  (app (req-mock/json-body (req-mock/request request-type endpoint) body)))
+  ([request-type endpoint]
+    (app (req-mock/request request-type endpoint)))
+  ([request-type endpoint body]
+    (app (req-mock/json-body (req-mock/request request-type endpoint) body))))
