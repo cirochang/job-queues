@@ -35,6 +35,11 @@ OR
 lein ring server-headless
 ```
 
+## How to run the tests
+```
+lein test
+```
+
 ## The solution
 
 When the software runs, it creates a webserver on port 3000 and creates a database called "job-queues" with some properties.
