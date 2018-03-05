@@ -1,4 +1,4 @@
-# job-queues
+# job-queues 2.0.0
 
 This is the second exercise of functional programming provided by Nubank.
 To see the enunciation of the proposed exercise click [here](/resources/queues-2.txt).
