@@ -1,12 +1,15 @@
-# job-queues
+# job-queues 2.0.0
 
-This is an exercise of functional programming provided by Nubank.
-To see the enunciation of the proposed exercise click [Here](/resources/queues-1.txt).
+This is the second exercise of functional programming provided by Nubank.
+To see the enunciation of the proposed exercise click [here](/resources/queues-2.txt).
+
+The second exercise is a continuation of the first exercise, click [here](/resources/queues-1.tx) to check the first one.
 
 ## Pre requirements
 
 - Java 1.8.0
 - Leiningen 2.8.1
+- MongoDB v3.4.10
 
 ## How to build
 
@@ -32,27 +35,126 @@ OR
 lein ring server-headless
 ```
 
-Where `<json-input>` is the input in json format
-
-Example:
+## How to run the tests
 ```
-cat resources/sample-input.json.txt | java -jar target/uberjar/job-queues-1.0.0-standalone.jar
+lein test
 ```
 
 ## The solution
 
-The solution was divided in some steps:
+When the software runs, it creates a webserver on port 3000 and creates a database called "job-queues" with some properties.
 
-To parse the data, I do:
-1. Read the input and parse to sequence format (easy to manipulate the data).
-2. Parse and split the data for jobs, agents, job_request.
+The application creates the following endpoints:
 
-Then, **for each** job request... (In fact I used recursion)
-1. Get the correct agent of this job request.
-2. Get all jobs that has type equal to the primaryskillset of the agent, and orders the urgent jobs to the beggining.
-3. Get all jobs that has type equal to the secundaryskillset of the agent, and orders the urgent jobs to the beggining.
-4. Join the results of steps 4 and 5 putting in a sequence (The primaryskillsets jobs is in the beggining of this sequence).
-5. Remove the jobs of the sequence that already was assigned.
-6. Get the first job of this sequence and assign to the agent. (in this moment the first of the sequence is the best match).
+#### POST /agents
 
-Finally, convert the assign jobs to json and output this information.
+Add an agent to the database.
+
+Example input:
+```json
+{
+  "id": "8ab86c18-3fae-4804-bfd9-c3d6e8f66260",
+  "name": "BoJack Horseman",
+  "primary_skillset": ["bills-questions"],
+  "secondary_skillset": []
+}
+```
+
+Example output:
+```
+ok
+```
+
+#### POST /jobs
+
+Add a job to the database.
+
+Example input:
+```json
+{
+  "id": "f26e890b-df8e-422e-a39c-7762aa0bac36",
+  "type": "rewards_question",
+  "urgent": false
+}
+```
+
+Example output:
+```
+ok
+```
+
+#### POST /request_jobs
+
+Complete the last job assigned by agent if this job exists.
+Assign an agent-id to a best job match if this match exists.
+And return the id of this job or indicate the lack of one (null).
+
+Example input:
+```json
+{ "agent_id": "8ab86c18-3fae-4804-bfd9-c3d6e8f66260" }
+```
+
+Example output:
+```json
+{
+  "job_id": "c0033410-981c-428a-954a-35dec05ef1d2",
+  "agent_id": "8ab86c18-3fae-4804-bfd9-c3d6e8f66260",
+}
+```
+
+
+#### GET /queue_state
+
+Output a breakdown of the job queue.
+Consisting of all being done, completed, and waiting jobs.
+
+Example output:
+```json
+{
+	"completed": [
+		{
+			"_id": "5a9c796bc9cca95e8bc04c71",
+			"id": "f26e890b-df8e-422e-a39c-7762aa0bac36",
+			"type": "rewards-question",
+			"urgent": false,
+			"status": "completed",
+			"created_at": "2018-03-04T22:55:39Z",
+			"assigned_by_agent": "ed0e23ef-6c2b-430c-9b90-cd4f1ff74c88"
+		}
+	],
+	"being done": [
+		{
+			"_id": "5a9c7971c9cca95e8bc04c74",
+			"id": "c0033410-981c-428a-954a-35dec05ef1d2",
+			"type": "bills-questions",
+			"urgent": true,
+			"status": "being done",
+			"created_at": "2018-03-04T22:55:45Z",
+			"assigned_by_agent": "8ab86c18-3fae-4804-bfd9-c3d6e8f66260"
+		}
+	],
+	"waiting": [
+		{
+			"_id": "5a9c796fc9cca95e8bc04c73",
+			"id": "690de6bc-163c-4345-bf6f-25dd0c58e864",
+			"type": "bills-questions",
+			"urgent": false,
+			"status": "being done",
+			"created_at": "2018-03-04T22:55:43Z",
+			"assigned_by_agent": "ed0e23ef-6c2b-430c-9b90-cd4f1ff74c88"
+		}
+	]
+}
+```
+
+#### GET /agent_stats/:agent-id
+
+Given an agent, output how many jobs of each type this agent has performed.
+
+Example output:
+```json
+{
+	"bills-questions": 1,
+	"rewards-question": 1
+}
+```
